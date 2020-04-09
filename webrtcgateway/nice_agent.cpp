@@ -457,7 +457,7 @@ void get_rtsp_rtp_video_total_len(const uint8_t* pbuffer, uint32_t dwbuflen, uin
     }
 }
 
-#include "../streampushclient/h264frame.h"
+#include "streampushclient/h264frame.h"
 void read_send_video(void* pdata)
 {
     nice_agent* pagent = (nice_agent*)pdata;
@@ -476,7 +476,7 @@ void read_send_video(void* pdata)
 
     char filename[MAX_PATH] = {0};
     //strcpy(filename, "D:\\github\\Desert-Eagle\\streampushclient\\testokmy.h264");
-    strcpy(filename, "..\\..\\streampushclient\\testokmy.h264");
+    strcpy(filename, "streampushclient\\testokmy.h264");
     FILE *video = fopen(filename, "rb");
     if (!video)
     {
