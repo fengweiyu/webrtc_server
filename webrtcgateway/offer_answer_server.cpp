@@ -27,9 +27,11 @@ DWORD WINAPI SendProc(LPVOID lpParam)
         if(0 == poffer_answer_server->m_WebRtcServer.GetSDP(&sdp))
         {
             poffer_answer_server->m_server.send(poffer_answer_server->m_hdl, sdp.c_str(), websocketpp::frame::opcode::text);
+            break;
         }
         Sleep(1);
     }
+    return 0;
 }
 
 void offer_answer_server::on_open(connection_hdl hdl) 
