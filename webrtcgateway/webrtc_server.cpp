@@ -159,6 +159,13 @@ int TcpServer::Close(SOCKET i_iClientSocketFd)
     closesocket(i_iClientSocketFd);
     return 0;
 }
+DWORD WINAPI ThreadProc(LPVOID lpParam)
+{
+    WebRtcServer *pWebRtcServer = (WebRtcServer *)lpParam;
+    pWebRtcServer->Proc();
+    
+    return 0;
+}
 
 /*****************************************************************************
 -Fuction		: TcpServer
@@ -172,7 +179,7 @@ int TcpServer::Close(SOCKET i_iClientSocketFd)
 ******************************************************************************/
 WebRtcServer::WebRtcServer()
 {
-
+    
 }
 
 /*****************************************************************************
@@ -187,7 +194,6 @@ WebRtcServer::WebRtcServer()
 ******************************************************************************/
 WebRtcServer::~WebRtcServer()
 {
-    CloseHandle(hThread);
 }
 
 /*****************************************************************************
@@ -202,17 +208,12 @@ WebRtcServer::~WebRtcServer()
 ******************************************************************************/
 int WebRtcServer::Start()
 {
-    HANDLE hThread = CreateThread(NULL, 0, Fun, NULL, 0, NULL);
+    Init(WEBRTC_SERVER_PORT,NULL);
 
-}
-DWORD WINAPI ThreadProc(LPVOID lpParam)
-{
-    MYDATA *pmd = (MYDATA *)lpParam;
-    printf("%d\n", pmd->val1);
-    printf("%d\n", pmd->val2);
+    HANDLE hThread = CreateThread(NULL, 0, ThreadProc, this, 0, NULL);
+    CloseHandle(hThread);
     return 0;
 }
-
 /*****************************************************************************
 -Fuction		: ~TcpServer
 -Description	: ~TcpServer
@@ -227,12 +228,27 @@ int WebRtcServer::Proc()
 {
     char acRecvBuf[8*1024];
     int iRecvLen=0;
-    memset(acRecvBuf,0,sizeof(acRecvBuf));
-    Init(WEBRTC_SERVER_PORT,NULL);
+    
     m_iClientSocketFd = Accept();
-    int iRet=Recv(acRecvBuf,&iRecvLen,sizeof(acRecvBuf),m_iClientSocketFd);
-    m_strSDP.assign(acRecvBuf);
-
+    if(m_iClientSocketFd == SOCKET_ERROR)
+    {
+        printf("µÈ´ýÇëÇóÊ§°Ü:%d", WSAGetLastError());
+    }
+    else
+    {
+        while(1)
+        {
+            memset(acRecvBuf,0,sizeof(acRecvBuf));
+            int iRet=Recv(acRecvBuf,&iRecvLen,sizeof(acRecvBuf),m_iClientSocketFd);
+            if(iRecvLen>0)
+            {
+                m_strSDP.assign(acRecvBuf);
+                break;
+            }
+            Sleep(1);
+        }
+    }
+    return 0;
 }
 
 /*****************************************************************************
@@ -245,9 +261,19 @@ int WebRtcServer::Proc()
 * -----------------------------------------------
 * 2017/09/21	  V1.0.0		 Yu Weifeng 	  Created
 ******************************************************************************/
-int WebRtcServer::GetSDP()
+int WebRtcServer::GetSDP(string *sdp)
 {
+    int iRet=-1;
+    if(m_strSDP.length()>0)
+    {
+        sdp->assign(m_strSDP.c_str());
+        iRet =0 ;
+    }
+    else
+    {
 
+    }
+    return iRet;
 }
 
 /*****************************************************************************
@@ -260,8 +286,8 @@ int WebRtcServer::GetSDP()
 * -----------------------------------------------
 * 2017/09/21	  V1.0.0		 Yu Weifeng 	  Created
 ******************************************************************************/
-int WebRtcServer::Send()
+int WebRtcServer::SendMsg(const char * i_strMsg)
 {
-
+    return Send((char *)i_strMsg,strlen(i_strMsg),m_iClientSocketFd);
 }
 

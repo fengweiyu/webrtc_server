@@ -29,7 +29,7 @@ public:
     SOCKET Accept();
     int Send(char * i_acSendBuf,int i_iSendLen,SOCKET i_iClientSocketFd);
     int Recv(char *o_acRecvBuf,int *o_piRecvLen,int i_iRecvBufMaxLen,SOCKET i_iClientSocketFd);
-    void Close(SOCKET i_iClientSocketFd);
+    int Close(SOCKET i_iClientSocketFd);
     
 private:
     SOCKET      m_iServerSocketFd;
@@ -51,7 +51,7 @@ public:
 	int Start();
 	int Proc();
 	int GetSDP(string *sdp);
-	int Send(char * i_strMsg);
+	int SendMsg(const char * i_strMsg);
 private:
 	SOCKET	  	m_iClientSocketFd;
 	string 		m_strSDP;

@@ -27,13 +27,7 @@
     <ClInclude Include="offer_answer_server.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="nice_agent.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="dtls_srtp.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="rtp_rtcp.h">
+    <ClInclude Include="webrtc_server.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,13 +41,7 @@
     <ClCompile Include="offer_answer_server.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="nice_agent.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="dtls_srtp.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="rtp_rtcp.cpp">
+    <ClCompile Include="webrtc_server.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
